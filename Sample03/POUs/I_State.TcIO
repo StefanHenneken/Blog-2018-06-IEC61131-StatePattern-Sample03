@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <Itf Name="I_State" Id="{67fa25c7-395b-45b1-aa93-be1b802d5c77}">
+    <Declaration><![CDATA[INTERFACE I_State
+]]></Declaration>
+    <Method Name="CustomerTakesCoin" Id="{47404b5c-ddca-4aea-8031-adf74b4f0917}">
+      <Declaration><![CDATA[METHOD CustomerTakesCoin : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="CustomerTakesProduct" Id="{65e19f78-e189-4597-9305-3d02c005492d}">
+      <Declaration><![CDATA[METHOD CustomerTakesProduct : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Description" Id="{73c4a00a-9bf7-46a2-bda5-50a460eae680}">
+      <Declaration><![CDATA[PROPERTY Description : STRING]]></Declaration>
+      <Get Name="Get" Id="{6c08231c-fb27-4662-b152-ff2228a53d43}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="InsertCoin" Id="{e75ade87-9030-41e0-9943-09fb025b9cd3}">
+      <Declaration><![CDATA[METHOD InsertCoin : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="PressButton" Id="{749b9145-65ee-472b-bf26-c831ed44301e}">
+      <Declaration><![CDATA[METHOD PressButton : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

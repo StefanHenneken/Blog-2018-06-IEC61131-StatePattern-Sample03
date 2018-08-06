@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="FB_HasCoinState" Id="{4542327b-fad5-4127-93a5-9d754c5837fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_HasCoinState IMPLEMENTS I_State
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	pMachine : POINTER TO FB_Machine;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="CustomerTakesCoin" Id="{07079302-8fd3-40ec-9e46-e23b26f356a3}">
+      <Declaration><![CDATA[METHOD CustomerTakesCoin : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomerTakesProduct" Id="{e30930e8-d194-4d35-a0ed-41c3b52ab562}">
+      <Declaration><![CDATA[METHOD CustomerTakesProduct : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Description" Id="{92a2c821-977c-4c79-a9fa-fa2bcd58c838}">
+      <Declaration><![CDATA[PROPERTY Description : STRING]]></Declaration>
+      <Get Name="Get" Id="{bd2e2ec5-7306-4b52-acb5-68a1282ac942}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Description := 'Has Coin';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_init" Id="{46bc79d9-3ab7-4dcb-8db7-f56fc6b87ff7}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	pMachine : POINTER TO FB_Machine;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.pMachine := pMachine;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InsertCoin" Id="{6cce552f-84aa-4529-92c1-362ac4c4dae2}">
+      <Declaration><![CDATA[METHOD InsertCoin : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PressButton" Id="{e9153bdc-1d24-471d-a8bb-7326ab81bb1e}">
+      <Declaration><![CDATA[METHOD PressButton : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (THIS^.pMachine^.nProducts > 0) THEN
+	THIS^.pMachine^.SetProducts(THIS^.pMachine^.nProducts - 1);
+	ADSLOGSTR(ADSLOG_MSGTYPE_HINT, 'Customer has pressed the button. Output product.', '');
+	pMachine^.SetState(pMachine^.ProductEjectedState);
+ELSE				
+	ADSLOGSTR(ADSLOG_MSGTYPE_HINT, 'Customer has pressed the button. No more products. Return coin.', '');
+	pMachine^.SetState(pMachine^.CoinEjectedState);
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HasCoinState">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HasCoinState.CustomerTakesCoin">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HasCoinState.CustomerTakesProduct">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HasCoinState.Description.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HasCoinState.FB_init">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HasCoinState.InsertCoin">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HasCoinState.PressButton">
+      <LineId Id="7" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

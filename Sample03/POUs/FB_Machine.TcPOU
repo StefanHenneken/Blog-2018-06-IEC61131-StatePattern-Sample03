@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="FB_Machine" Id="{f50e73cc-6d6c-4918-b2bc-262d6ffb1bde}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_Machine
+VAR_INPUT
+	bButton: BOOL;
+	bInsertCoin: BOOL;
+	bTakeProduct		:	BOOL;
+	bTakeCoin			:	BOOL;	
+END_VAR
+VAR_OUTPUT
+	ipState				:	I_State := fbWaitingState;	
+	nProducts			:	UINT;	
+END_VAR
+VAR
+	fbCoinEjectedState		:	FB_CoinEjectedState(THIS);
+	fbHasCoinState			:	FB_HasCoinState(THIS);
+	fbProductEjectedState	:	FB_ProductEjectedState(THIS);
+	fbWaitingState			:	FB_WaitingState(THIS);
+	
+	rtrigButton				:	R_TRIG;
+	rtrigInsertCoin			:	R_TRIG;
+	rtrigTakeProduct		:	R_TRIG;
+	rtrigTakeCoin			:	R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[rtrigButton(CLK := bButton);
+rtrigInsertCoin(CLK := bInsertCoin);
+rtrigTakeProduct(CLK := bTakeProduct);
+rtrigTakeCoin(CLK := bTakeCoin);
+
+IF (rtrigButton.Q) THEN
+	ipState.PressButton();
+END_IF
+
+IF (rtrigInsertCoin.Q) THEN
+	ipState.InsertCoin();
+END_IF
+
+IF (rtrigTakeProduct.Q) THEN
+	ipState.CustomerTakesProduct();
+END_IF
+
+IF (rtrigTakeCoin.Q) THEN
+	ipState.CustomerTakesCoin();
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Property Name="CoinEjectedState" Id="{3bae123f-1761-4dcd-8840-7f4f4dc8ca19}">
+      <Declaration><![CDATA[PROPERTY INTERNAL CoinEjectedState : I_State]]></Declaration>
+      <Get Name="Get" Id="{5e73377e-92d7-4e7c-bc4b-1dd9540c5295}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CoinEjectedState := THIS^.fbCoinEjectedState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_init" Id="{a213588c-99e9-403d-b664-265c20a195d3}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	nProducts :	UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.nProducts := nProducts;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HasCoinState" Id="{1c464c53-5fcc-473d-971b-69693b0a5e63}">
+      <Declaration><![CDATA[PROPERTY INTERNAL HasCoinState : I_State]]></Declaration>
+      <Get Name="Get" Id="{245a105b-8b85-4d11-a9f1-08b0b7979c28}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HasCoinState := THIS^.fbHasCoinState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ProductEjectedState" Id="{3d47f721-b04c-4fca-90ae-11edfaf5352d}">
+      <Declaration><![CDATA[PROPERTY INTERNAL ProductEjectedState : I_State]]></Declaration>
+      <Get Name="Get" Id="{5a5f582c-330b-4650-974a-35fdfda8f2b6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProductEjectedState := THIS^.fbProductEjectedState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="SetProducts" Id="{aabe1e3c-336b-476b-b3f0-3aa38b51e028}">
+      <Declaration><![CDATA[METHOD INTERNAL SetProducts : BOOL
+VAR_INPUT
+	newProducts : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.nProducts := newProducts;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetState" Id="{bac7998a-96e0-484d-9b0b-984b4f2ae380}">
+      <Declaration><![CDATA[METHOD INTERNAL SetState : BOOL
+VAR_INPUT
+	newState : I_State;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.ipState := newState;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="WaitingState" Id="{50c40cfc-35ec-45fa-bb16-115c583a60c7}">
+      <Declaration><![CDATA[PROPERTY INTERNAL WaitingState : I_State]]></Declaration>
+      <Get Name="Get" Id="{b4d9b6ac-64a3-4669-8d92-757ed4ecacb1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[WaitingState := THIS^.fbWaitingState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_Machine">
+      <LineId Id="64" Count="3" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="40" Count="14" />
+      <LineId Id="61" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Machine.CoinEjectedState.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.HasCoinState.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.ProductEjectedState.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.SetProducts">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.SetState">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.WaitingState.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmItem" TcSmVersion="1.0" TcVersion="3.1.4022.22" ClassName="CNestedPlcProjDef">
+	<Project GUID="{4AF45E9E-DA15-4E97-9733-03CC6A158C79}" Name="Sample03" PrjFilePath="..\..\Sample03\Sample03.plcproj" TmcFilePath="..\..\Sample03\Sample03.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+			<Name>Sample03 Instance</Name>
+			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+		</Instance>
+	</Project>
+</TcSmItem>
