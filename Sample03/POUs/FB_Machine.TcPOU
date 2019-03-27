@@ -1,22 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
   <POU Name="FB_Machine" Id="{f50e73cc-6d6c-4918-b2bc-262d6ffb1bde}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_Machine
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_Machine IMPLEMENTS I_StateMachine
 VAR_INPUT
-	bButton: BOOL;
-	bInsertCoin: BOOL;
-	bTakeProduct		:	BOOL;
-	bTakeCoin			:	BOOL;	
+	bButton				: BOOL;
+	bInsertCoin			: BOOL;
+	bTakeProduct 		:	BOOL;
+	bTakeCoin 			:	BOOL;	
 END_VAR
 VAR_OUTPUT
 	ipState				:	I_State := fbWaitingState;	
-	nProducts			:	UINT;	
+		
 END_VAR
 VAR
-	fbCoinEjectedState		:	FB_CoinEjectedState(THIS);
-	fbHasCoinState			:	FB_HasCoinState(THIS);
-	fbProductEjectedState	:	FB_ProductEjectedState(THIS);
-	fbWaitingState			:	FB_WaitingState(THIS);
+	fbCoinEjectedState		:	FB_CoinEjectedState;
+	fbHasCoinState				:	FB_HasCoinState;
+	fbProductEjectedState	:	FB_ProductEjectedState;
+	fbWaitingState				:	FB_WaitingState;
+	
+	_nProducts			:	UINT;
 	
 	rtrigButton				:	R_TRIG;
 	rtrigInsertCoin			:	R_TRIG;
@@ -68,7 +70,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.nProducts := nProducts;
+        <ST><![CDATA[THIS^._nProducts := nProducts;
+
+wireUpStateTransitions();
 ]]></ST>
       </Implementation>
     </Method>
@@ -80,6 +84,15 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[HasCoinState := THIS^.fbHasCoinState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="nProducts" Id="{975c93c0-dd8a-466a-8e50-ab97cdd99152}">
+      <Declaration><![CDATA[PROPERTY INTERNAL nProducts : UINT]]></Declaration>
+      <Get Name="Get" Id="{41353718-922a-43d3-9b0d-14698c0e66ad}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[nProducts := _nProducts;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -101,7 +114,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.nProducts := newProducts;]]></ST>
+        <ST><![CDATA[THIS^._nProducts := newProducts;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetState" Id="{bac7998a-96e0-484d-9b0b-984b4f2ae380}">
@@ -125,6 +138,32 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="wireUpStateTransitions" Id="{ae777051-a0ea-4107-b4e5-d78929e86b79}">
+      <Declaration><![CDATA[METHOD PRIVATE wireUpStateTransitions
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbWaitingState.SetTransitionStates(
+	Machine := THIS^,
+	CoinInsertedNext := fbHasCoinState
+);
+
+fbHasCoinState.SetTransitionStates(
+	Machine := THIS^,
+	ButtonPressedProductDecrementedNext := fbProductEjectedState,
+	ButtonPressedNoProductNext := fbCoinEjectedState
+);
+
+fbProductEjectedState.SetTransitionStates(
+	Machine := THIS^,
+	AfterProductEjectedNext := fbWaitingState
+);
+
+fbCoinEjectedState.SetTransitionStates(
+	Machine := THIS^,
+	CustomerTakesCoinNext := fbWaitingState
+);]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_Machine">
       <LineId Id="64" Count="3" />
       <LineId Id="63" Count="0" />
@@ -136,9 +175,14 @@ END_VAR
     </LineIds>
     <LineIds Name="FB_Machine.FB_init">
       <LineId Id="7" Count="0" />
-      <LineId Id="14" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
     </LineIds>
     <LineIds Name="FB_Machine.HasCoinState.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.nProducts.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Machine.ProductEjectedState.Get">
@@ -152,6 +196,18 @@ END_VAR
     </LineIds>
     <LineIds Name="FB_Machine.WaitingState.Get">
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Machine.wireUpStateTransitions">
+      <LineId Id="6" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="11" Count="4" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="16" Count="3" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

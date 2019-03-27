@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <Itf Name="I_StateMachine" Id="{65d0fd1c-2b9d-4576-93a3-7ffa34dd5ae2}">
+    <Declaration><![CDATA[INTERFACE INTERNAL I_StateMachine
+]]></Declaration>
+    <Property Name="nProducts" Id="{d4cbb3a8-71cf-4487-a6c2-c17a611c6176}">
+      <Declaration><![CDATA[PROPERTY INTERNAL nProducts : UINT]]></Declaration>
+      <Get Name="Get" Id="{d23ecf84-1208-43d7-8f0d-758fd592db53}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="SetProducts" Id="{f73f979c-a534-45ff-b434-b2802d8ba376}">
+      <Declaration><![CDATA[METHOD INTERNAL SetProducts : BOOL
+VAR_INPUT
+	newProducts : UINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetState" Id="{e65189b7-943d-4c06-8aa3-7d0a24422102}">
+      <Declaration><![CDATA[METHOD INTERNAL SetState : BOOL
+VAR_INPUT
+	newState : I_State;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
