@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
   <POU Name="FB_WaitingState" Id="{bcf41680-3dab-4cd9-bc56-3d8d89453988}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_WaitingState IMPLEMENTS I_State
 VAR_INPUT
@@ -7,7 +7,8 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	pMachine : POINTER TO FB_Machine;
+	pMachine : I_StateMachine;
+	coinInsertedNext : I_State;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -38,24 +39,12 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_init" Id="{4c283c3e-72ce-47e4-a655-8d8dc6552857}">
-      <Declaration><![CDATA[METHOD FB_init : BOOL
-VAR_INPUT
-	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
-	pMachine : POINTER TO FB_Machine;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.pMachine := pMachine;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="InsertCoin" Id="{f8f4dc73-5d56-4b22-a640-25d47afc33d7}">
       <Declaration><![CDATA[METHOD InsertCoin : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[ADSLOGSTR(ADSLOG_MSGTYPE_HINT, 'Customer has insert a coin.', '');
-pMachine^.SetState(pMachine^.HasCoinState);]]></ST>
+pMachine.SetState(coinInsertedNext);]]></ST>
       </Implementation>
     </Method>
     <Method Name="PressButton" Id="{291ec246-7036-4eab-8c64-3c8ae17a9320}">
@@ -63,6 +52,18 @@ pMachine^.SetState(pMachine^.HasCoinState);]]></ST>
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetTransitionStates" Id="{44d6c76c-96c0-49c2-a953-8ae130620548}">
+      <Declaration><![CDATA[METHOD SetTransitionStates
+VAR_INPUT
+	Machine : I_StateMachine;
+	CoinInsertedNext : I_State;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.coinInsertedNext := CoinInsertedNext;
+THIS^.pMachine := Machine;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_WaitingState">
@@ -77,15 +78,16 @@ pMachine^.SetState(pMachine^.HasCoinState);]]></ST>
     <LineIds Name="FB_WaitingState.Description.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_WaitingState.FB_init">
-      <LineId Id="7" Count="0" />
-    </LineIds>
     <LineIds Name="FB_WaitingState.InsertCoin">
       <LineId Id="7" Count="0" />
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_WaitingState.PressButton">
       <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_WaitingState.SetTransitionStates">
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

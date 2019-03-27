@@ -37,6 +37,9 @@
     <Compile Include="POUs\I_State.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\I_StateMachine.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
   <POU Name="FB_ProductEjectedState" Id="{826451e0-85d0-40a3-8e88-772e41875071}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_ProductEjectedState IMPLEMENTS I_State
 VAR_INPUT
@@ -7,7 +7,8 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	pMachine : POINTER TO FB_Machine;
+	pMachine : I_StateMachine;
+	afterProductEjectedNext : I_State;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -25,7 +26,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[ADSLOGSTR(ADSLOG_MSGTYPE_HINT, 'Customer has taken the product.', '');
-pMachine^.SetState(pMachine^.WaitingState);
+pMachine.SetState(afterProductEjectedNext);
 ]]></ST>
       </Implementation>
     </Method>
@@ -40,18 +41,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_init" Id="{03f25ce3-0c55-4b1c-95c7-649fcb972492}">
-      <Declaration><![CDATA[METHOD FB_init : BOOL
-VAR_INPUT
-	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
-	pMachine : POINTER TO FB_Machine;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.pMachine := pMachine;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="InsertCoin" Id="{d9ac4430-7591-4d79-9de2-37f819dcc17e}">
       <Declaration><![CDATA[METHOD InsertCoin : BOOL
 ]]></Declaration>
@@ -64,6 +53,18 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetTransitionStates" Id="{5d3d6feb-dcd4-4ac5-b4fd-f2ebd2133e37}">
+      <Declaration><![CDATA[METHOD SetTransitionStates
+VAR_INPUT
+	Machine : I_StateMachine;
+	AfterProductEjectedNext : I_State;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.afterProductEjectedNext := AfterProductEjectedNext;
+THIS^.pMachine := Machine;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_ProductEjectedState">
@@ -80,14 +81,15 @@ END_VAR
     <LineIds Name="FB_ProductEjectedState.Description.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_ProductEjectedState.FB_init">
-      <LineId Id="7" Count="0" />
-    </LineIds>
     <LineIds Name="FB_ProductEjectedState.InsertCoin">
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_ProductEjectedState.PressButton">
       <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ProductEjectedState.SetTransitionStates">
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
